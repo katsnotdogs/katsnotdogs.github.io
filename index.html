@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Timeline Dashboard - Calendar View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .current-status {
+            background: #f39c12;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .dashboard-content {
+            padding: 40px;
+        }
+        
+        .store-status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .store-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .store-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(100px);
+            transition: transform 0.6s ease;
+        }
+        
+        .store-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .store-card:hover::before {
+            transform: translateX(-100px);
+        }
+        
+        .store-card.vntura { border-left-color: #e74c3c; }
+        .store-card.nuefashion-de { border-left-color: #3498db; }
+        .store-card.nuefashion-dk { border-left-color: #27ae60; }
+        .store-card.deutsche-chic { border-left-color: #9b59b6; }
+        
+        .store-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .store-flag {
+            font-size: 1.2em;
+        }
+        
+        .store-status {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .status-item {
+            text-align: center;
+        }
+        
+        .status-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .current-day {
+            font-size: 1.1em;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 25px;
+            background: #f39c12;
+            color: white;
+        }
+        
+        .products-today {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .completion-date {
+            font-size: 1em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .days-remaining {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .store-progress {
+            margin-top: 15px;
+        }
+        
+        .progress-bar {
+            background: #ecf0f1;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .charts-section {
+            margin-top: 40px;
+        }
+        
+        .chart-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            background: transparent;
+            border: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255,255,255,0.5);
+        }
+        
+        .chart-content {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .chart-panel {
+            display: none;
+            padding: 40px;
+        }
+        
+        .chart-panel.active {
+            display: block;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 500px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .grid-line {
+            stroke: #e0e0e0;
+            stroke-width: 1;
+            stroke-dasharray: 2,2;
+        }
+        
+        .axis-line {
+            stroke: #333;
+            stroke-width: 2;
+        }
+        
+        .cumulative-line {
+            fill: none;
+            stroke: #3498db;
+            stroke-width: 4;
+            filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.3));
+        }
+        
+        .store-line {
+            fill: none;
+            stroke-width: 3;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .store-vntura { stroke: #e74c3c; }
+        .store-nuefashion-de { stroke: #3498db; }
+        .store-nuefashion-dk { stroke: #27ae60; }
+        .store-deutsche-chic { stroke: #9b59b6; }
+        
+        .data-point {
+            stroke: white;
+            stroke-width: 3;
+            r: 6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .data-point.completed { opacity: 1; }
+        .data-point.current { 
+            r: 8;
+            animation: pulse 2s infinite;
+            stroke-width: 4;
+        }
+        .data-point.future { opacity: 0.7; }
+        .data-point.finished { opacity: 0.3; }
+        
+        .data-point.cumulative { fill: #3498db; }
+        .data-point.vntura { fill: #e74c3c; }
+        .data-point.nuefashion-de { fill: #3498db; }
+        .data-point.nuefashion-dk { fill: #27ae60; }
+        .data-point.deutsche-chic { fill: #9b59b6; }
+        
+        .data-point:hover {
+            r: 10;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        
+        @keyframes pulse {
+            0% { r: 8; }
+            50% { r: 12; }
+            100% { r: 8; }
+        }
+        
+        .axis-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            fill: #555;
+        }
+        
+        .axis-title {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 16px;
+            fill: #333;
+            font-weight: bold;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 250px;
+        }
+        
+        .tooltip.visible {
+            opacity: 1;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .vntura-color { background: #e74c3c; }
+        .nuefashion-de-color { background: #3498db; }
+        .nuefashion-dk-color { background: #27ae60; }
+        .deutsche-chic-color { background: #9b59b6; }
+        .cumulative-color { background: #3498db; }
+        
+        .milestone-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .milestone {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .milestone:hover {
+            transform: translateY(-3px);
+        }
+        
+        .milestone.critical {
+            background: linear-gradient(135deg, #f8d7da, #fab1a0);
+            border-color: #e74c3c;
+        }
+        
+        .milestone h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .milestone.critical h3 {
+            color: #721c24;
+        }
+        
+        .stack-segment {
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stack-segment:hover {
+            opacity: 0.8;
+        }
+        
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-top: 4px solid #3498db;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .chart-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗓️ Store Timeline Dashboard</h1>
+            <p class="subtitle">Calendar-based view with individual store progress</p>
+        </div>
+        
+        <div class="current-status">
+            📅 Today: Monday, June 23, 2025 | 📊 Total Products Today: 75 | 🏁 Final Completion: July 3, 2025 (10 days)
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Store Status Cards -->
+            <div class="store-status-grid" id="storeStatusGrid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            
+            <!-- Quick Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-number">75</span>
+                    <span class="stat-label">Products Today</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100</span>
+                    <span class="stat-label">Peak Daily Load</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Days to First Store Done</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">10</span>
+                    <span class="stat-label">Days to Full Completion</span>
+                </div>
+            </div>
+            
+            <!-- Charts Section with Tabs -->
+            <div class="charts-section">
+                <div class="chart-tabs">
+                    <button class="tab-button active" data-tab="cumulative">📈 Total Daily Requirements</button>
+                    <button class="tab-button" data-tab="individual">🏪 Individual Store Progress</button>
+                    <button class="tab-button" data-tab="stacked">📊 Daily Contribution Breakdown</button>
+                </div>
+                
+                <div class="chart-content">
+                    <!-- Cumulative Chart -->
+                    <div class="chart-panel active" id="cumulative">
+                        <div class="chart-title">📈 Total Daily Product Requirements Over Calendar Time</div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #f39c12;"></div>
+                                <span>Today (June 23)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #3498db;"></div>
+                                <span>Future Requirements</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #27ae60;"></div>
+                                <span>Store Completions</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <svg class="chart-svg" id="cumulativeChart"></svg>
+                            <div class="tooltip" id="cumulativeTooltip"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Individual Stores Chart -->
+                    <div class="chart-panel" id="individual">
+                        <div class="chart-title">🏪 Individual Store Progress Over Calendar Time</div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-line vntura-color"></div>
+                                <span><strong>Vntura (UK)</strong> 🇬🇧 - Finishes June 27</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-line nuefashion-de-color"></div>
+                                <span><strong>NUEFASHION (DE)</strong> 🇩🇪 - Finishes June 29</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-line nuefashion-dk-color"></div>
+                                <span><strong>NUEFASHION (DK)</strong> 🇩🇰 - Finishes July 2</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-line deutsche-chic-color"></div>
+                                <span><strong>Deutsche chic</strong> 🇩🇪 - Finishes July 3</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <svg class="chart-svg" id="individualChart"></svg>
+                            <div class="tooltip" id="individualTooltip"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stacked Chart -->
+                    <div class="chart-panel" id="stacked">
+                        <div class="chart-title">📊 Daily Contribution Breakdown by Calendar Date</div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot vntura-color"></div>
+                                <span>Vntura (UK) 🇬🇧</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot nuefashion-de-color"></div>
+                                <span>NUEFASHION (DE) 🇩🇪</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot nuefashion-dk-color"></div>
+                                <span>NUEFASHION (DK) 🇩🇰</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot deutsche-chic-color"></div>
+                                <span>Deutsche chic 🇩🇪</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <svg class="chart-svg" id="stackedChart"></svg>
+                            <div class="tooltip" id="stackedTooltip"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestones -->
+            <div class="milestone-section">
+                <div class="milestone">
+                    <h3>🎯 Peak Load Day</h3>
+                    <p><strong>June 24:</strong> Highest daily requirement (100 products)</p>
+                </div>
+                <div class="milestone">
+                    <h3>📉 Tapering Begins</h3>
+                    <p><strong>June 27:</strong> First store (Vntura) completes, load decreases</p>
+                </div>
+                <div class="milestone critical">
+                    <h3>🏁 Final Completion</h3>
+                    <p><strong>July 3:</strong> Deutsche chic finishes, all stores complete</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to create dates
+        function createDate(daysFromToday) {
+            const today = new Date(2025, 5, 23); // June 23, 2025
+            const date = new Date(today);
+            date.setDate(today.getDate() + daysFromToday);
+            return date;
+        }
+
+        // Helper function to format dates
+        function formatDate(date, format = 'short') {
+            if (format === 'short') {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+            return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        }
+
+        // Store data with calendar progression
+        const storeData = {
+            'Vntura (UK)': {
+                currentDay: 11,
+                color: '#e74c3c',
+                className: 'vntura',
+                flag: '🇬🇧',
+                completionDate: createDate(4), // June 27
+                daysRemaining: 4
+            },
+            'NUEFASHION (DE)': {
+                currentDay: 9,
+                color: '#3498db',
+                className: 'nuefashion-de',
+                flag: '🇩🇪',
+                completionDate: createDate(6), // June 29
+                daysRemaining: 6
+            },
+            'NUEFASHION (DK)': {
+                currentDay: 6,
+                color: '#27ae60',
+                className: 'nuefashion-dk',
+                flag: '🇩🇰',
+                completionDate: createDate(9), // July 2
+                daysRemaining: 9
+            },
+            'Deutsche chic': {
+                currentDay: 5,
+                color: '#9b59b6',
+                className: 'deutsche-chic',
+                flag: '🇩🇪',
+                completionDate: createDate(10), // July 3
+                daysRemaining: 10
+            }
+        };
+
+        // Generate calendar timeline data
+        function generateTimelineData() {
+            const timeline = [];
+            
+            for (let dayOffset = 0; dayOffset <= 10; dayOffset++) {
+                const currentDate = createDate(dayOffset);
+                let totalProducts = 0;
+                const storeContributions = {};
+                
+                Object.entries(storeData).forEach(([storeName, store]) => {
+                    const storeDayNumber = store.currentDay + dayOffset;
+                    let products = 0;
+                    
+                    if (storeDayNumber <= 14) { // Still in upload phase
+                        // Calculate products based on store day
+                        if (storeDayNumber <= 2) products = 0;
+                        else if (storeDayNumber <= 4) products = 5;
+                        else if (storeDayNumber === 5) products = 10;
+                        else if (storeDayNumber <= 7) products = 15;
+                        else if (storeDayNumber === 8) products = 15; // + subcategories
+                        else if (storeDayNumber >= 9) products = 25;
+                    }
+                    // After day 14, store goes to 0 (discount phase)
+                    
+                    storeContributions[storeName] = products;
+                    totalProducts += products;
+                });
+                
+                const status = dayOffset === 0 ? 'current' : 'future';
+                
+                timeline.push({
+                    date: currentDate,
+                    dayOffset,
+                    totalProducts,
+                    status,
+                    storeContributions,
+                    details: generateDetailsText(storeContributions, currentDate)
+                });
+            }
+            
+            return timeline;
+        }
+
+        function generateDetailsText(contributions, date) {
+            const active = Object.entries(contributions)
+                .filter(([store, products]) => products > 0)
+                .map(([store, products]) => `${store}: ${products}`)
+                .join(', ');
+            
+            return active || 'All stores completed';
+        }
+
+        // Generate individual store data for calendar view
+        function generateStoreCalendarData() {
+            const storeCalendarData = {};
+            
+            Object.entries(storeData).forEach(([storeName, store]) => {
+                const storeTimeline = [];
+                
+                for (let dayOffset = 0; dayOffset <= 10; dayOffset++) {
+                    const currentDate = createDate(dayOffset);
+                    const storeDayNumber = store.currentDay + dayOffset;
+                    let products = 0;
+                    let status = 'future';
+                    
+                    if (dayOffset === 0) status = 'current';
+                    else if (storeDayNumber > 14) status = 'finished';
+                    
+                    if (storeDayNumber <= 14) {
+                        if (storeDayNumber <= 2) products = 0;
+                        else if (storeDayNumber <= 4) products = 5;
+                        else if (storeDayNumber === 5) products = 10;
+                        else if (storeDayNumber <= 7) products = 15;
+                        else if (storeDayNumber === 8) products = 15;
+                        else if (storeDayNumber >= 9) products = 25;
+                    }
+                    
+                    storeTimeline.push({
+                        date: currentDate,
+                        dayOffset,
+                        storeDayNumber,
+                        products,
+                        status,
+                        details: `Day ${storeDayNumber}: ${products} products`
+                    });
+                }
+                
+                storeCalendarData[storeName] = storeTimeline;
+            });
+            
+            return storeCalendarData;
+        }
+
+        const timelineData = generateTimelineData();
+        const storeCalendarData = generateStoreCalendarData();
+
+        // Tab functionality
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.chart-panel');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                    button.classList.add('active');
+                    const targetTab = button.getAttribute('data-tab');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+        }
+
+        function createStoreStatusCards() {
+            const container = document.getElementById('storeStatusGrid');
+            container.innerHTML = '';
+
+            Object.entries(storeData).forEach(([storeName, store]) => {
+                const todayProducts = timelineData[0].storeContributions[storeName];
+                const progressPercent = ((14 - store.daysRemaining) / 14) * 100;
+
+                const card = document.createElement('div');
+                card.className = `store-card ${store.className}`;
+                card.innerHTML = `
+                    <div class="store-name">
+                        <span class="store-flag">${store.flag}</span>
+                        ${storeName}
+                    </div>
+                    <div class="store-status">
+                        <div class="status-item">
+                            <div class="status-label">Current Day</div>
+                            <div class="current-day">Day ${store.currentDay}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Products Today</div>
+                            <div class="products-today">${todayProducts}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Completes On</div>
+                            <div class="completion-date">${formatDate(store.completionDate)}</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Days Remaining</div>
+                            <div class="days-remaining">${store.daysRemaining}</div>
+                        </div>
+                    </div>
+                    <div class="store-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercent}%; background: ${store.color};"></div>
+                        </div>
+                        <div class="progress-text">${Math.round(progressPercent)}% complete</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function createChart(svgId, data, isIndividual = false) {
+            const svg = document.getElementById(svgId);
+            const container = svg.parentElement;
+            const width = container.clientWidth - 80;
+            const height = container.clientHeight - 80;
+            const margin = { top: 40, right: 40, bottom: 80, left: 60 };
+            const graphWidth = width - margin.left - margin.right;
+            const graphHeight = height - margin.top - margin.bottom;
+
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            const maxProducts = isIndividual ? 30 : Math.max(...timelineData.map(d => d.totalProducts)) * 1.1;
+            const xScale = (dayOffset) => margin.left + (dayOffset / 10) * graphWidth;
+            const yScale = (products) => margin.top + (1 - products / maxProducts) * graphHeight;
+
+            // Grid lines
+            const gridLines = isIndividual ? 6 : 10;
+            for (let i = 0; i <= gridLines; i++) {
+                const y = margin.top + (i / gridLines) * graphHeight;
+                const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridLine.setAttribute('x1', margin.left);
+                gridLine.setAttribute('y1', y);
+                gridLine.setAttribute('x2', margin.left + graphWidth);
+                gridLine.setAttribute('y2', y);
+                gridLine.setAttribute('class', 'grid-line');
+                svg.appendChild(gridLine);
+            }
+
+            // Axes
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', margin.left);
+            xAxis.setAttribute('y1', margin.top + graphHeight);
+            xAxis.setAttribute('x2', margin.left + graphWidth);
+            xAxis.setAttribute('y2', margin.top + graphHeight);
+            xAxis.setAttribute('class', 'axis-line');
+            svg.appendChild(xAxis);
+
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', margin.left);
+            yAxis.setAttribute('y1', margin.top);
+            yAxis.setAttribute('x2', margin.left);
+            yAxis.setAttribute('y2', margin.top + graphHeight);
+            yAxis.setAttribute('class', 'axis-line');
+            svg.appendChild(yAxis);
+
+            // Y-axis labels
+            for (let i = 0; i <= gridLines; i++) {
+                const value = Math.round((maxProducts * (gridLines - i)) / gridLines);
+                const y = margin.top + (i / gridLines) * graphHeight;
+                
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', margin.left - 15);
+                label.setAttribute('y', y + 5);
+                label.setAttribute('text-anchor', 'end');
+                label.setAttribute('class', 'axis-label');
+                label.textContent = value;
+                svg.appendChild(label);
+            }
+
+            // X-axis labels (dates)
+            timelineData.forEach((d, i) => {
+                const x = xScale(d.dayOffset);
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', margin.top + graphHeight + 25);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'axis-label');
+                label.textContent = formatDate(d.date);
+                svg.appendChild(label);
+                
+                // Add day labels
+                const dayLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                dayLabel.setAttribute('x', x);
+                dayLabel.setAttribute('y', margin.top + graphHeight + 45);
+                dayLabel.setAttribute('text-anchor', 'middle');
+                dayLabel.setAttribute('class', 'axis-label');
+                dayLabel.style.fontSize = '10px';
+                dayLabel.style.fill = '#888';
+                if (d.dayOffset === 0) {
+                    dayLabel.textContent = 'Today';
+                } else {
+                    dayLabel.textContent = `+${d.dayOffset}d`;
+                }
+                svg.appendChild(dayLabel);
+            });
+
+            // Axis titles
+            const yTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yTitle.setAttribute('x', 20);
+            yTitle.setAttribute('y', margin.top + graphHeight / 2);
+            yTitle.setAttribute('text-anchor', 'middle');
+            yTitle.setAttribute('transform', `rotate(-90, 20, ${margin.top + graphHeight / 2})`);
+            yTitle.setAttribute('class', 'axis-title');
+            yTitle.textContent = isIndividual ? 'Products Per Day' : 'Total Products Per Day';
+            svg.appendChild(yTitle);
+
+            const xTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xTitle.setAttribute('x', margin.left + graphWidth / 2);
+            xTitle.setAttribute('y', height - 15);
+            xTitle.setAttribute('text-anchor', 'middle');
+            xTitle.setAttribute('class', 'axis-title');
+            xTitle.textContent = 'Calendar Dates';
+            svg.appendChild(xTitle);
+
+            if (isIndividual) {
+                // Draw individual store lines
+                Object.entries(storeCalendarData).forEach(([storeName, storeTimeline]) => {
+                    const store = storeData[storeName];
+                    let pathData = '';
+                    storeTimeline.forEach((d, i) => {
+                        const x = xScale(d.dayOffset);
+                        const y = yScale(d.products);
+                        if (i === 0) {
+                            pathData += `M ${x} ${y}`;
+                        } else {
+                            pathData += ` L ${x} ${y}`;
+                        }
+                    });
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    line.setAttribute('d', pathData);
+                    line.setAttribute('class', `store-line store-${store.className}`);
+                    svg.appendChild(line);
+
+                    // Add data points
+                    storeTimeline.forEach(d => {
+                        const x = xScale(d.dayOffset);
+                        const y = yScale(d.products);
+                        
+                        const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        point.setAttribute('cx', x);
+                        point.setAttribute('cy', y);
+                        point.setAttribute('class', `data-point ${store.className} ${d.status}`);
+                        
+                        point.addEventListener('mouseenter', (e) => showTooltip(e, { 
+                            ...d, 
+                            storeName,
+                            dateStr: formatDate(d.date, 'long')
+                        }, 'individualTooltip'));
+                        point.addEventListener('mouseleave', () => hideTooltip('individualTooltip'));
+                        point.addEventListener('mousemove', (e) => moveTooltip(e, 'individualTooltip'));
+                        
+                        svg.appendChild(point);
+                    });
+                });
+            } else {
+                // Draw cumulative line
+                let pathData = '';
+                timelineData.forEach((d, i) => {
+                    const x = xScale(d.dayOffset);
+                    const y = yScale(d.totalProducts);
+                    if (i === 0) {
+                        pathData += `M ${x} ${y}`;
+                    } else {
+                        pathData += ` L ${x} ${y}`;
+                    }
+                });
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                line.setAttribute('d', pathData);
+                line.setAttribute('class', 'cumulative-line');
+                svg.appendChild(line);
+
+                // Add data points
+                timelineData.forEach(d => {
+                    const x = xScale(d.dayOffset);
+                    const y = yScale(d.totalProducts);
+                    
+                    const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    point.setAttribute('cx', x);
+                    point.setAttribute('cy', y);
+                    point.setAttribute('class', `data-point cumulative ${d.status}`);
+                    
+                    point.addEventListener('mouseenter', (e) => showTooltip(e, {
+                        ...d,
+                        dateStr: formatDate(d.date, 'long')
+                    }, 'cumulativeTooltip'));
+                    point.addEventListener('mouseleave', () => hideTooltip('cumulativeTooltip'));
+                    point.addEventListener('mousemove', (e) => moveTooltip(e, 'cumulativeTooltip'));
+                    
+                    svg.appendChild(point);
+                });
+            }
+        }
+
+        function createStackedChart() {
+            const svg = document.getElementById('stackedChart');
+            const container = svg.parentElement;
+            const width = container.clientWidth - 80;
+            const height = container.clientHeight - 80;
+            const margin = { top: 40, right: 40, bottom: 80, left: 60 };
+            const graphWidth = width - margin.left - margin.right;
+            const graphHeight = height - margin.top - margin.bottom;
+
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            const barWidth = graphWidth / 11;
+            const maxTotal = Math.max(...timelineData.map(d => d.totalProducts)) * 1.1;
+
+            // Grid lines
+            for (let i = 0; i <= 10; i++) {
+                const y = margin.top + (i / 10) * graphHeight;
+                const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridLine.setAttribute('x1', margin.left);
+                gridLine.setAttribute('y1', y);
+                gridLine.setAttribute('x2', margin.left + graphWidth);
+                gridLine.setAttribute('y2', y);
+                gridLine.setAttribute('class', 'grid-line');
+                svg.appendChild(gridLine);
+            }
+
+            // Axes
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', margin.left);
+            xAxis.setAttribute('y1', margin.top + graphHeight);
+            xAxis.setAttribute('x2', margin.left + graphWidth);
+            xAxis.setAttribute('y2', margin.top + graphHeight);
+            xAxis.setAttribute('class', 'axis-line');
+            svg.appendChild(xAxis);
+
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', margin.left);
+            yAxis.setAttribute('y1', margin.top);
+            yAxis.setAttribute('x2', margin.left);
+            yAxis.setAttribute('y2', margin.top + graphHeight);
+            yAxis.setAttribute('class', 'axis-line');
+            svg.appendChild(yAxis);
+
+            // Y-axis labels
+            for (let i = 0; i <= 10; i++) {
+                const value = Math.round((maxTotal * (10 - i)) / 10);
+                const y = margin.top + (i / 10) * graphHeight;
+                
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', margin.left - 15);
+                label.setAttribute('y', y + 5);
+                label.setAttribute('text-anchor', 'end');
+                label.setAttribute('class', 'axis-label');
+                label.textContent = value;
+                svg.appendChild(label);
+            }
+
+            // X-axis labels
+            timelineData.forEach((d, i) => {
+                const x = margin.left + (i + 0.5) * barWidth;
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', margin.top + graphHeight + 25);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'axis-label');
+                label.textContent = formatDate(d.date);
+                svg.appendChild(label);
+                
+                // Add day labels
+                const dayLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                dayLabel.setAttribute('x', x);
+                dayLabel.setAttribute('y', margin.top + graphHeight + 45);
+                dayLabel.setAttribute('text-anchor', 'middle');
+                dayLabel.setAttribute('class', 'axis-label');
+                dayLabel.style.fontSize = '10px';
+                dayLabel.style.fill = '#888';
+                if (d.dayOffset === 0) {
+                    dayLabel.textContent = 'Today';
+                } else {
+                    dayLabel.textContent = `+${d.dayOffset}d`;
+                }
+                svg.appendChild(dayLabel);
+            });
+
+            // Create stacked bars
+            timelineData.forEach((dayData, dayIndex) => {
+                const x = margin.left + dayIndex * barWidth;
+                let currentY = margin.top + graphHeight;
+                
+                const storeOrder = ['Vntura (UK)', 'NUEFASHION (DE)', 'NUEFASHION (DK)', 'Deutsche chic'];
+                
+                storeOrder.forEach(storeName => {
+                    const store = storeData[storeName];
+                    const products = dayData.storeContributions[storeName];
+                    
+                    if (products > 0) {
+                        const segmentHeight = (products / maxTotal) * graphHeight;
+                        
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('x', x + 5);
+                        rect.setAttribute('y', currentY - segmentHeight);
+                        rect.setAttribute('width', barWidth - 10);
+                        rect.setAttribute('height', segmentHeight);
+                        rect.setAttribute('fill', store.color);
+                        rect.setAttribute('class', 'stack-segment');
+                        
+                        rect.addEventListener('mouseenter', (e) => showTooltip(e, {
+                            storeName,
+                            products,
+                            date: dayData.date,
+                            dateStr: formatDate(dayData.date, 'long'),
+                            details: `${storeName}: ${products} products`
+                        }, 'stackedTooltip'));
+                        rect.addEventListener('mouseleave', () => hideTooltip('stackedTooltip'));
+                        rect.addEventListener('mousemove', (e) => moveTooltip(e, 'stackedTooltip'));
+                        
+                        svg.appendChild(rect);
+                        currentY -= segmentHeight;
+                    }
+                });
+            });
+
+            // Axis titles
+            const yTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yTitle.setAttribute('x', 20);
+            yTitle.setAttribute('y', margin.top + graphHeight / 2);
+            yTitle.setAttribute('text-anchor', 'middle');
+            yTitle.setAttribute('transform', `rotate(-90, 20, ${margin.top + graphHeight / 2})`);
+            yTitle.setAttribute('class', 'axis-title');
+            yTitle.textContent = 'Total Products Per Day';
+            svg.appendChild(yTitle);
+
+            const xTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xTitle.setAttribute('x', margin.left + graphWidth / 2);
+            xTitle.setAttribute('y', height - 15);
+            xTitle.setAttribute('text-anchor', 'middle');
+            xTitle.setAttribute('class', 'axis-title');
+            xTitle.textContent = 'Calendar Dates';
+            svg.appendChild(xTitle);
+        }
+
+        function showTooltip(event, data, tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            let content = '';
+            
+            if (data.storeName && data.products !== undefined) {
+                content = `
+                    <strong>${data.storeName}</strong><br>
+                    <strong>${data.dateStr}</strong><br>
+                    <strong>${data.products} products</strong><br>
+                    ${data.details || ''}
+                `;
+            } else if (data.totalProducts !== undefined) {
+                content = `
+                    <strong>${data.dateStr}</strong><br>
+                    <strong>${data.totalProducts} total products</strong><br>
+                    ${data.details}
+                `;
+            } else {
+                content = `
+                    <strong>${data.storeName}</strong><br>
+                    <strong>${data.dateStr}</strong><br>
+                    ${data.details}
+                `;
+            }
+            
+            tooltip.innerHTML = content;
+            tooltip.classList.add('visible');
+            moveTooltip(event, tooltipId);
+        }
+
+        function moveTooltip(event, tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            const container = document.querySelector('.dashboard-content');
+            const rect = container.getBoundingClientRect();
+            
+            tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+            tooltip.style.top = (event.clientY - rect.top - 15) + 'px';
+        }
+
+        function hideTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            tooltip.classList.remove('visible');
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            createStoreStatusCards();
+            createChart('cumulativeChart', timelineData, false);
+            createChart('individualChart', null, true);
+            createStackedChart();
+            
+            // Redraw on window resize
+            window.addEventListener('resize', function() {
+                createChart('cumulativeChart', timelineData, false);
+                createChart('individualChart', null, true);
+                createStackedChart();
+            });
+        });
+    </script>
+</body>
+</html>
