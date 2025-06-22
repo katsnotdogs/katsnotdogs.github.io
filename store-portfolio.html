@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOPIFY FIGHTER ULTRA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* CRT Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.15),
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        /* Animated Background */
+        .arcade-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(180deg, #1a0033 0%, #330066 50%, #000033 100%);
+            z-index: -2;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,0,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 10s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Main Container */
+        .arcade-cabinet {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header with Neon Glow */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            background: linear-gradient(45deg, #ff006e, #ffff00, #00ffff, #ff006e);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+            text-shadow: 
+                0 0 30px rgba(255,0,110,0.5),
+                0 0 60px rgba(255,0,110,0.3);
+            letter-spacing: 3px;
+        }
+        
+        .header .subtitle {
+            color: #00ffff;
+            font-size: 10px;
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.8);
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        /* Power Meter Stats */
+        .power-meter {
+            background: linear-gradient(180deg, #222 0%, #111 100%);
+            border: 3px solid #ffff00;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 0 20px rgba(255,255,0,0.5),
+                inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        
+        .stat-block {
+            text-align: center;
+            position: relative;
+        }
+        
+        .stat-label {
+            font-size: 8px;
+            color: #00ffff;
+            text-shadow: 0 0 5px rgba(0,255,255,0.8);
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            color: #ffff00;
+            text-shadow: 
+                0 0 10px rgba(255,255,0,0.8),
+                0 0 20px rgba(255,255,0,0.5);
+            animation: stat-pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes stat-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Action Buttons */
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(180deg, #ff006e 0%, #cc0055 100%);
+            color: white;
+            border: 3px solid #ffff00;
+            padding: 15px 30px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 
+                0 5px 0 #990044,
+                0 8px 10px rgba(0,0,0,0.5);
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover {
+            transform: translateY(2px);
+            box-shadow: 
+                0 3px 0 #990044,
+                0 5px 10px rgba(0,0,0,0.5);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                0 1px 0 #990044,
+                0 2px 5px rgba(0,0,0,0.5);
+        }
+        
+        /* Category Arenas */
+        .category-section {
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(50,0,100,0.3) 100%);
+            border: 3px solid;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 30px rgba(255,0,255,0.3),
+                inset 0 0 30px rgba(0,0,0,0.5);
+        }
+        
+        .category-section::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff006e, #ffff00, #00ffff, #ff006e);
+            background-size: 300% 300%;
+            animation: border-dance 5s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes border-dance {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        .category-title {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #ffff00;
+            text-shadow: 
+                0 0 10px rgba(255,255,0,0.8),
+                0 0 20px rgba(255,255,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-title::before,
+        .category-title::after {
+            content: "⚡";
+            font-size: 18px;
+            animation: lightning-flash 1s ease-in-out infinite;
+        }
+        
+        @keyframes lightning-flash {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* Fighter Zones */
+        .fighter-zone {
+            min-height: 150px;
+            background: rgba(0,0,0,0.5);
+            border: 2px dashed #666;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .fighter-zone.drag-over {
+            background: rgba(255,255,0,0.2);
+            border-color: #ffff00;
+            box-shadow: inset 0 0 30px rgba(255,255,0,0.3);
+        }
+        
+        .fighter-zone.drag-over::after {
+            content: "DROP HERE!";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #ffff00;
+            text-shadow: 0 0 20px rgba(255,255,0,0.8);
+            animation: blink 0.3s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .starting-lineup {
+            background: rgba(0,255,0,0.1);
+            border-color: #00ff00;
+        }
+        
+        .starting-lineup.warning {
+            background: rgba(255,165,0,0.2);
+            border-color: #ffa500;
+            animation: warning-pulse 1s infinite;
+        }
+        
+        .starting-lineup.danger {
+            background: rgba(255,0,0,0.2);
+            border-color: #ff0000;
+            animation: danger-pulse 0.5s infinite;
+        }
+        
+        @keyframes warning-pulse {
+            0%, 100% { box-shadow: inset 0 0 20px rgba(255,165,0,0.3); }
+            50% { box-shadow: inset 0 0 40px rgba(255,165,0,0.6); }
+        }
+        
+        @keyframes danger-pulse {
+            0%, 100% { box-shadow: inset 0 0 20px rgba(255,0,0,0.3); }
+            50% { box-shadow: inset 0 0 40px rgba(255,0,0,0.6); }
+        }
+        
+        /* Fighter Cards */
+        .fighter {
+            width: 120px;
+            cursor: grab;
+            transition: all 0.3s;
+            position: relative;
+            animation: fighter-idle 2s ease-in-out infinite;
+        }
+        
+        @keyframes fighter-idle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .fighter:hover {
+            transform: scale(1.1) rotate(-2deg);
+            z-index: 10;
+        }
+        
+        .fighter:hover .fighter-sprite {
+            box-shadow: 
+                0 0 30px rgba(255,255,0,0.8),
+                0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .fighter.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            animation: none;
+        }
+        
+        .fighter-info {
+            font-size: 8px;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, #333 0%, #111 100%);
+            padding: 8px;
+            border: 2px solid #666;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fighter-info::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffff00, transparent);
+            animation: scan-line 2s linear infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .fighter-flag {
+            font-size: 20px;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+        
+        .fighter-name {
+            color: #ffff00;
+            margin-bottom: 4px;
+            text-shadow: 0 0 5px rgba(255,255,0,0.8);
+            line-height: 1.2;
+        }
+        
+        .fighter-category {
+            color: #00ffff;
+            font-size: 6px;
+            text-shadow: 0 0 3px rgba(0,255,255,0.8);
+        }
+        
+        /* Fighter Sprite */
+        .fighter-sprite {
+            width: 80px;
+            height: 100px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(135deg, #ff006e 0%, #ff4b2b 100%);
+            border: 3px solid #000;
+            border-radius: 10px 10px 50% 50%;
+            overflow: hidden;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.5),
+                inset 0 0 20px rgba(255,255,255,0.2);
+        }
+        
+        .fighter-sprite::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            animation: energy-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes energy-pulse {
+            0%, 100% { transform: translateX(-50%) scale(0.8); opacity: 0.5; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+        }
+        
+        .fighter-sprite::after {
+            content: "👊";
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            animation: punch 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+        }
+        
+        @keyframes punch {
+            0%, 80%, 100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+            85% { transform: translateX(-50%) scale(1.3) rotate(-10deg); }
+            90% { transform: translateX(-50%) scale(1.3) rotate(10deg); }
+        }
+        
+        /* Fashion vs Home Decor specific styles */
+        .fighter[data-category="fashion"] .fighter-sprite {
+            background: linear-gradient(135deg, #ff006e 0%, #ff006e 50%, #ffff00 100%);
+        }
+        
+        .fighter[data-category="homeDecor"] .fighter-sprite {
+            background: linear-gradient(135deg, #00ffff 0%, #0066ff 50%, #ff00ff 100%);
+        }
+        
+        /* Side Panel - Fighter Select */
+        .fighter-select {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            width: 200px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(50,0,100,0.5) 100%);
+            border: 3px solid #ffff00;
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 0 30px rgba(255,255,0,0.5),
+                inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .fighter-select-title {
+            font-size: 12px;
+            color: #ff006e;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255,0,110,0.8);
+            animation: title-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes title-glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,0,110,0.8); }
+            50% { text-shadow: 0 0 20px rgba(255,0,110,1); }
+        }
+        
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, #1a0033 0%, #000033 100%);
+            border: 3px solid #ffff00;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 
+                0 0 50px rgba(255,255,0,0.5),
+                inset 0 0 30px rgba(0,0,0,0.5);
+            animation: modal-appear 0.3s ease-out;
+        }
+        
+        @keyframes modal-appear {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #ffff00;
+            text-shadow: 0 0 15px rgba(255,255,0,0.8);
+            text-align: center;
+        }
+        
+        .modal textarea {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ffff;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            resize: vertical;
+        }
+        
+        .modal textarea:focus {
+            outline: none;
+            border-color: #ffff00;
+            box-shadow: 0 0 20px rgba(255,255,0,0.5);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .export-modal pre {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ffff;
+            padding: 20px;
+            font-size: 10px;
+            overflow: auto;
+            max-height: 400px;
+            margin-bottom: 20px;
+            color: #0f0;
+            text-shadow: 0 0 5px rgba(0,255,0,0.5);
+        }
+        
+        /* Combo Counter */
+        .combo-counter {
+            position: fixed;
+            left: 20px;
+            top: 100px;
+            font-size: 24px;
+            color: #ffff00;
+            text-shadow: 
+                0 0 20px rgba(255,255,0,0.8),
+                2px 2px 0 #000;
+            opacity: 0;
+            animation: combo-hit 1s ease-out;
+        }
+        
+        @keyframes combo-hit {
+            0% { 
+                opacity: 1; 
+                transform: scale(2) rotate(-10deg); 
+            }
+            50% { 
+                transform: scale(1.5) rotate(5deg); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(1) rotate(0deg) translateY(-50px); 
+            }
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #111;
+            border: 1px solid #333;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff006e 0%, #ffff00 100%);
+            border: 1px solid #000;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ffff00 0%, #ff006e 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="arcade-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="arcade-cabinet">
+        <div class="header">
+            <h1>SHOPIFY FIGHTER ULTRA</h1>
+            <div class="subtitle">TOURNAMENT EDITION</div>
+        </div>
+        
+        <div class="power-meter">
+            <div class="stat-block">
+                <div class="stat-label">TOTAL FIGHTERS</div>
+                <div class="stat-value" id="totalCount">0</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">IN BATTLE</div>
+                <div class="stat-value" id="categorizedCount">0</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">AVAILABLE</div>
+                <div class="stat-value" id="uncategorizedCount">0</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="exportToNotion()">📤 EXPORT TO NOTION</button>
+            <button class="btn" onclick="resetAll()">🔄 RESET TOURNAMENT</button>
+        </div>
+        
+        <div class="fighter-select">
+            <div class="fighter-select-title">⚡ SELECT FIGHTER ⚡</div>
+            <div id="uncategorizedZone" class="fighter-zone"></div>
+        </div>
+        
+        <div class="category-section">
+            <h2 class="category-title">STARTING LINEUP (4-6 FIGHTERS)</h2>
+            <div class="fighter-zone starting-lineup" id="startingLineup" data-category="Starting Lineup"></div>
+        </div>
+        
+        <div class="category-section">
+            <h2 class="category-title">FIRST SUBS</h2>
+            <div class="fighter-zone" id="firstSubs" data-category="First Subs"></div>
+        </div>
+        
+        <div class="category-section">
+            <h2 class="category-title">BENCH WARRIORS</h2>
+            <div class="fighter-zone" id="bench" data-category="Bench"></div>
+        </div>
+        
+        <div class="category-section">
+            <h2 class="category-title">HIDDEN GEMS (MISREPPED BUT VALUABLE)</h2>
+            <div class="fighter-zone" id="valuable" data-category="Misrepped but Valuable"></div>
+        </div>
+        
+        <div class="category-section">
+            <h2 class="category-title">DEFEATED (GARBAGE)</h2>
+            <div class="fighter-zone" id="garbage" data-category="Garbage"></div>
+        </div>
+    </div>
+    
+    <!-- Note Modal -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle">⚡ FIGHTER INTEL ⚡</h3>
+            <textarea id="noteText" placeholder="Enter fighter intelligence..."></textarea>
+            <div class="modal-buttons">
+                <button class="btn" onclick="saveNote()">💾 SAVE INTEL</button>
+                <button class="btn" onclick="closeModal()">❌ CANCEL</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content export-modal">
+            <h3 class="modal-title">📋 TOURNAMENT RESULTS</h3>
+            <pre id="exportContent"></pre>
+            <div class="modal-buttons">
+                <button class="btn" onclick="copyToClipboard()">📋 COPY</button>
+                <button class="btn" onclick="downloadExport()">💾 DOWNLOAD CSV</button>
+                <button class="btn" onclick="closeExportModal()">❌ CLOSE</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="combo-counter" id="comboCounter">COMBO!</div>
+    
+    <script>
+        // Store data
+        const stores = {
+            fashion: [
+                { name: "Burleigh Breeze Boutique", url: "https://burleighbreeze-boutique.com/", country: "🇦🇺", countryName: "Australia" },
+                { name: "Drift Noosa", url: "https://www.driftandtide.com/", country: "🇦🇺", countryName: "Australia" },
+                { name: "Velden Dune", url: "https://veldendune.com/", country: "🇦🇺", countryName: "Australia" },
+                { name: "Wild Aura Apparel", url: "https://wildauraapparel.com/", country: "🇺🇸", countryName: "United States" },
+                { name: "Allura North", url: "https://alluranorth.com/", country: "🇺🇸", countryName: "United States" },
+                { name: "Verona Amour London", url: "https://verona-amourlondon.com/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Moss and Muse", url: "https://mossandmuse.co.uk/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Vntura", url: "https://vntura.com/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Atelier Rue", url: "https://atelier-rue.co.uk/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Couture Celeste", url: "https://coutureceleste.fr/", country: "🇫🇷", countryName: "France" },
+                { name: "Alpine Couture", url: "https://alpinecouture.ch/", country: "🇨🇭", countryName: "Switzerland" },
+                { name: "Livia und Kai Zurich", url: "https://liviaundkai-zurich.ch/", country: "🇨🇭", countryName: "Switzerland" },
+                { name: "Nuefashion DK", url: "https://nuefashion.dk/", country: "🇩🇰", countryName: "Denmark" },
+                { name: "Nuefashion DE", url: "https://nuefashion.de/", country: "🇩🇪", countryName: "Germany" },
+                { name: "Deutsche-chic", url: "https://deutschechic.de/", country: "🇩🇪", countryName: "Germany" },
+                { name: "Clara Moda", url: "https://claramoda.es/", country: "🇪🇸", countryName: "Spain" },
+                { name: "Katarzyna moda", url: "https://katarzynamoda.pl/", country: "🇵🇱", countryName: "Poland" },
+                { name: "Grazia Moda Milano", url: "http://graziamoda-milano.it/", country: "🇮🇹", countryName: "Italy" },
+                { name: "Nuefashion", url: "https://nuefashion.nl/", country: "🇳🇱", countryName: "Netherlands" }
+            ],
+            homeDecor: [
+                { name: "Hearth & Haven", url: "https://hearthandhaven.co.uk/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Lights and Comfort", url: "https://lightsandcomfort.com/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Eichen und Moos", url: "https://eichenundmoss.de/", country: "🇩🇪", countryName: "Germany" },
+                { name: "Casa und Weiter", url: "https://casaundweiter.de/", country: "🇩🇪", countryName: "Germany" }
+            ]
+        };
+        
+        let fighterNotes = {};
+        let currentFighterId = null;
+        let draggedElement = null;
+        let comboCount = 0;
+        
+        // Initialize fighters
+        function initializeFighters() {
+            const uncategorizedZone = document.getElementById('uncategorizedZone');
+            
+            // Create fashion fighters
+            stores.fashion.forEach((store, index) => {
+                const fighter = createFighter(store, 'fashion', `fashion-${index}`);
+                uncategorizedZone.appendChild(fighter);
+            });
+            
+            // Create home decor fighters
+            stores.homeDecor.forEach((store, index) => {
+                const fighter = createFighter(store, 'homeDecor', `decor-${index}`);
+                uncategorizedZone.appendChild(fighter);
+            });
+            
+            updateStats();
+        }
+        
+        function createFighter(store, category, id) {
+            const fighter = document.createElement('div');
+            fighter.className = 'fighter';
+            fighter.draggable = true;
+            fighter.id = id;
+            fighter.innerHTML = `
+                <div class="fighter-info">
+                    <div class="fighter-flag">${store.country}</div>
+                    <div class="fighter-name">${store.name}</div>
+                    <div class="fighter-category">${category === 'fashion' ? '👔 FASHION' : '🏠 HOME DECOR'}</div>
+                </div>
+                <div class="fighter-sprite"></div>
+            `;
+            
+            // Store metadata
+            fighter.dataset.storeName = store.name;
+            fighter.dataset.url = store.url;
+            fighter.dataset.country = store.countryName;
+            fighter.dataset.category = category;
+            
+            // Event listeners
+            fighter.addEventListener('dragstart', handleDragStart);
+            fighter.addEventListener('dragend', handleDragEnd);
+            fighter.addEventListener('click', () => openNoteModal(id));
+            
+            return fighter;
+        }
+        
+        // Drag and drop handlers
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+        }
+        
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+        
+        // Set up drop zones
+        document.querySelectorAll('.fighter-zone').forEach(zone => {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('drop', handleDrop);
+            zone.addEventListener('dragleave', handleDragLeave);
+        });
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            if (draggedElement) {
+                e.currentTarget.appendChild(draggedElement);
+                updateStartingLineupColor();
+                updateStats();
+                showCombo();
+                draggedElement = null;
+            }
+        }
+        
+        // Starting lineup color management
+        function updateStartingLineupColor() {
+            const startingLineup = document.getElementById('startingLineup');
+            const fighterCount = startingLineup.children.length;
+            
+            startingLineup.classList.remove('warning', 'danger');
+            
+            if (fighterCount === 5) {
+                startingLineup.classList.add('warning');
+            } else if (fighterCount >= 6) {
+                startingLineup.classList.add('danger');
+            }
+        }
+        
+        // Combo effects
+        function showCombo() {
+            comboCount++;
+            const combo = document.getElementById('comboCounter');
+            combo.style.opacity = '0';
+            combo.textContent = `${comboCount} HIT COMBO!`;
+            combo.style.animation = 'none';
+            
+            setTimeout(() => {
+                combo.style.animation = 'combo-hit 1s ease-out';
+            }, 10);
+            
+            setTimeout(() => {
+                comboCount = 0;
+            }, 2000);
+        }
+        
+        // Note management
+        function openNoteModal(fighterId) {
+            currentFighterId = fighterId;
+            const fighter = document.getElementById(fighterId);
+            const storeName = fighter.dataset.storeName;
+            
+            document.getElementById('modalTitle').innerHTML = `⚡ FIGHTER INTEL - ${storeName} ⚡`;
+            document.getElementById('noteText').value = fighterNotes[fighterId] || '';
+            document.getElementById('noteModal').style.display = 'block';
+        }
+        
+        function saveNote() {
+            const noteText = document.getElementById('noteText').value;
+            if (currentFighterId) {
+                if (noteText.trim()) {
+                    fighterNotes[currentFighterId] = noteText;
+                } else {
+                    delete fighterNotes[currentFighterId];
+                }
+            }
+            closeModal();
+        }
+        
+        function closeModal() {
+            document.getElementById('noteModal').style.display = 'none';
+            currentFighterId = null;
+        }
+        
+        // Stats update
+        function updateStats() {
+            const total = document.querySelectorAll('.fighter').length;
+            const categorized = document.querySelectorAll('.fighter-zone:not(#uncategorizedZone) .fighter').length;
+            const uncategorized = document.querySelectorAll('#uncategorizedZone .fighter').length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('categorizedCount').textContent = categorized;
+            document.getElementById('uncategorizedCount').textContent = uncategorized;
+        }
+        
+        // Export functionality
+        function exportToNotion() {
+            const exportData = collectExportData();
+            const notionFormat = formatForNotion(exportData);
+            
+            document.getElementById('exportContent').textContent = notionFormat;
+            document.getElementById('exportModal').style.display = 'block';
+        }
+        
+        function collectExportData() {
+            const categories = [
+                { id: 'startingLineup', name: 'Starting Lineup' },
+                { id: 'firstSubs', name: 'First Subs' },
+                { id: 'bench', name: 'Bench' },
+                { id: 'valuable', name: 'Hidden Gems (Misrepped but Valuable)' },
+                { id: 'garbage', name: 'Defeated (Garbage)' }
+            ];
+            
+            const data = {};
+            
+            categories.forEach(category => {
+                const zone = document.getElementById(category.id);
+                const fighters = zone.querySelectorAll('.fighter');
+                
+                data[category.name] = Array.from(fighters).map(fighter => ({
+                    name: fighter.dataset.storeName,
+                    url: fighter.dataset.url,
+                    country: fighter.dataset.country,
+                    type: fighter.dataset.category === 'fashion' ? 'Fashion' : 'Home Decor',
+                    notes: fighterNotes[fighter.id] || ''
+                }));
+            });
+            
+            return data;
+        }
+        
+        function formatForNotion(data) {
+            let output = "# SHOPIFY FIGHTER TOURNAMENT RESULTS\n\n";
+            output += `🏆 Tournament Date: ${new Date().toLocaleString()}\n\n`;
+            output += `---\n\n`;
+            
+            for (const [category, stores] of Object.entries(data)) {
+                output += `## ⚡ ${category.toUpperCase()} (${stores.length} fighters)\n\n`;
+                
+                if (stores.length === 0) {
+                    output += "_No fighters in this category_\n\n";
+                } else {
+                    stores.forEach((store, index) => {
+                        output += `### ${index + 1}. ${store.name}\n`;
+                        output += `- **🔗 URL:** ${store.url}\n`;
+                        output += `- **🌍 Country:** ${store.country}\n`;
+                        output += `- **🏷️ Type:** ${store.type}\n`;
+                        if (store.notes) {
+                            output += `- **📝 Fighter Intel:** ${store.notes}\n`;
+                        }
+                        output += "\n";
+                    });
+                }
+                output += `---\n\n`;
+            }
+            
+            return output;
+        }
+        
+        function copyToClipboard() {
+            const content = document.getElementById('exportContent').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('⚡ COPIED TO CLIPBOARD! ⚡');
+            });
+        }
+        
+        function downloadExport() {
+            const data = collectExportData();
+            let csv = "Category,Store Name,URL,Country,Type,Notes\n";
+            
+            for (const [category, stores] of Object.entries(data)) {
+                stores.forEach(store => {
+                    csv += `"${category}","${store.name}","${store.url}","${store.country}","${store.type}","${store.notes.replace(/"/g, '""')}"\n`;
+                });
+            }
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'shopify-fighter-tournament-results.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+        
+        // Reset functionality
+        function resetAll() {
+            if (confirm('⚡ RESET THE TOURNAMENT? ALL FIGHTERS WILL RETURN TO SELECT SCREEN! ⚡')) {
+                const uncategorizedZone = document.getElementById('uncategorizedZone');
+                // Get all fighters from all zones
+                const allFighters = document.querySelectorAll('.fighter');
+                
+                // Move each fighter back to uncategorized
+                allFighters.forEach(fighter => {
+                    uncategorizedZone.appendChild(fighter);
+                });
+                
+                // Clear all notes
+                fighterNotes = {};
+                
+                // Update the starting lineup color (should be back to green)
+                const startingLineup = document.getElementById('startingLineup');
+                startingLineup.classList.remove('warning', 'danger');
+                
+                // Update statistics
+                updateStats();
+                
+                // Show epic reset message
+                const combo = document.getElementById('comboCounter');
+                combo.textContent = 'TOURNAMENT RESET!';
+                combo.style.animation = 'combo-hit 2s ease-out';
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initializeFighters);
+        
+        // Close modals on escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeExportModal();
+            }
+        });
+    </script>
+</body>
+</html>
