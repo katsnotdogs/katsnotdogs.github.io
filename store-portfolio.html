@@ -255,7 +255,7 @@
         
         .category-title {
             font-size: 14px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #ffff00;
             text-shadow: 
                 0 0 10px rgba(255,255,0,0.8),
@@ -288,6 +288,7 @@
             padding: 20px;
             transition: all 0.3s;
             position: relative;
+            justify-content: center; /* Center fighters in the zone */
         }
         
         .fighter-zone.drag-over {
@@ -311,6 +312,14 @@
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
+        }
+        
+        /* Special style for the main fighter pool to remove inner border */
+        #uncategorizedZone {
+            border: none;
+            background: transparent;
+            padding: 0;
+            min-height: auto;
         }
         
         .starting-lineup {
@@ -342,7 +351,7 @@
         
         /* Fighter Cards */
         .fighter {
-            width: 120px;
+            width: 130px; /* Increased width */
             cursor: grab;
             transition: all 0.3s;
             position: relative;
@@ -372,7 +381,6 @@
         }
         
         .fighter-info {
-            font-size: 8px;
             margin-bottom: 8px;
             background: linear-gradient(180deg, #333 0%, #111 100%);
             padding: 8px;
@@ -380,6 +388,12 @@
             border-radius: 5px;
             position: relative;
             overflow: hidden;
+            text-align: center;
+            min-height: 110px; /* Give a consistent height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
         }
         
         .fighter-info::before {
@@ -399,21 +413,25 @@
         }
         
         .fighter-flag {
-            font-size: 20px;
-            margin-bottom: 4px;
+            font-size: 26px; /* Increased size */
+            margin-bottom: 5px;
             filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
         }
         
         .fighter-name {
             color: #ffff00;
-            margin-bottom: 4px;
+            font-size: 10px; /* Increased size */
+            margin-bottom: 6px;
             text-shadow: 0 0 5px rgba(255,255,0,0.8);
-            line-height: 1.2;
+            line-height: 1.3; /* Adjusted for better readability */
+            flex-grow: 1; /* Allow name to take available space */
+            display: flex;
+            align-items: center;
         }
         
         .fighter-category {
             color: #00ffff;
-            font-size: 6px;
+            font-size: 7px;
             text-shadow: 0 0 3px rgba(0,255,255,0.8);
         }
         
@@ -466,45 +484,20 @@
             90% { transform: translateX(-50%) scale(1.3) rotate(10deg); }
         }
         
-        /* Fashion vs Home Decor specific styles */
+        /* Category specific styles */
         .fighter[data-category="fashion"] .fighter-sprite {
             background: linear-gradient(135deg, #ff006e 0%, #ff006e 50%, #ffff00 100%);
         }
-        
         .fighter[data-category="homeDecor"] .fighter-sprite {
             background: linear-gradient(135deg, #00ffff 0%, #0066ff 50%, #ff00ff 100%);
         }
-        
-        /* Side Panel - Fighter Select */
-        .fighter-select {
-            position: fixed;
-            right: 20px;
-            top: 100px;
-            width: 200px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(50,0,100,0.5) 100%);
-            border: 3px solid #ffff00;
-            padding: 20px;
-            max-height: 70vh;
-            overflow-y: auto;
-            box-shadow: 
-                0 0 30px rgba(255,255,0,0.5),
-                inset 0 0 20px rgba(0,0,0,0.5);
+        .fighter[data-category="other"] .fighter-sprite {
+            background: linear-gradient(135deg, #cc00ff 0%, #00ffff 100%);
         }
-        
-        .fighter-select-title {
-            font-size: 12px;
-            color: #ff006e;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255,0,110,0.8);
-            animation: title-glow 2s ease-in-out infinite;
+        .fighter[data-category="other"] .fighter-sprite::after {
+            content: "👜";
         }
-        
-        @keyframes title-glow {
-            0%, 100% { text-shadow: 0 0 10px rgba(255,0,110,0.8); }
-            50% { text-shadow: 0 0 20px rgba(255,0,110,1); }
-        }
-        
+
         /* Modals */
         .modal {
             display: none;
@@ -547,6 +540,34 @@
             text-align: center;
         }
         
+        .modal-form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-form-group label {
+            display: block;
+            font-size: 10px;
+            color: #00ffff;
+            margin-bottom: 5px;
+        }
+
+        .modal-form-group input,
+        .modal-form-group select {
+            width: 100%;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ffff;
+            color: #fff;
+            font-family: inherit;
+            font-size: 10px;
+            padding: 10px;
+        }
+        .modal-form-group input:focus,
+        .modal-form-group select:focus {
+             outline: none;
+            border-color: #ffff00;
+            box-shadow: 0 0 20px rgba(255,255,0,0.5);
+        }
+
         .modal textarea {
             width: 100%;
             min-height: 200px;
@@ -570,6 +591,17 @@
             display: flex;
             gap: 15px;
             justify-content: center;
+        }
+
+        #modalUrlContainer {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #modalUrl {
+            color: #00ffff;
+            font-size: 10px;
+            word-break: break-all;
         }
         
         .export-modal pre {
@@ -649,22 +681,25 @@
             </div>
             <div class="stat-block">
                 <div class="stat-label">IN BATTLE</div>
-                <div class="stat-value" id="categorizedCount">0</div>
+                <div class="stat-value" id="inBattleCount">0</div>
             </div>
             <div class="stat-block">
                 <div class="stat-label">AVAILABLE</div>
-                <div class="stat-value" id="uncategorizedCount">0</div>
+                <div class="stat-value" id="availableCount">0</div>
             </div>
         </div>
         
         <div class="controls">
+            <button class="btn" onclick="openAddFighterModal()">➕ ADD FIGHTER</button>
             <button class="btn" onclick="exportToNotion()">📤 EXPORT TO NOTION</button>
             <button class="btn" onclick="resetAll()">🔄 RESET TOURNAMENT</button>
         </div>
         
-        <div class="fighter-select">
-            <div class="fighter-select-title">⚡ SELECT FIGHTER ⚡</div>
-            <div id="uncategorizedZone" class="fighter-zone"></div>
+        <div class="category-section">
+            <h2 class="category-title">SELECT A FIGHTER</h2>
+            <div id="uncategorizedZone" class="fighter-zone">
+                <!-- Fighters will be populated here by JS -->
+            </div>
         </div>
         
         <div class="category-section">
@@ -693,10 +728,46 @@
         </div>
     </div>
     
+    <!-- Add Fighter Modal -->
+    <div class="modal" id="addFighterModal">
+        <div class="modal-content">
+            <h3 class="modal-title">⚡ CREATE NEW FIGHTER ⚡</h3>
+            <form id="addFighterForm">
+                <div class="modal-form-group">
+                    <label for="storeName">Store Name</label>
+                    <input type="text" id="storeName" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="storeUrl">Store URL</label>
+                    <input type="url" id="storeUrl">
+                </div>
+                <div class="modal-form-group">
+                    <label for="storeCountry">Country</label>
+                    <select id="storeCountry" required></select>
+                </div>
+                <div class="modal-form-group">
+                    <label for="storeCategory">Category</label>
+                    <select id="storeCategory" required>
+                        <option value="fashion">Fashion</option>
+                        <option value="homeDecor">Home Decor</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn" type="submit">💾 CREATE FIGHTER</button>
+                    <button class="btn" type="button" onclick="closeAddFighterModal()">❌ CANCEL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Note Modal -->
     <div class="modal" id="noteModal">
         <div class="modal-content">
             <h3 class="modal-title" id="modalTitle">⚡ FIGHTER INTEL ⚡</h3>
+            <div id="modalUrlContainer">
+                <a id="modalUrl" href="#" target="_blank" rel="noopener noreferrer"></a>
+            </div>
             <textarea id="noteText" placeholder="Enter fighter intelligence..."></textarea>
             <div class="modal-buttons">
                 <button class="btn" onclick="saveNote()">💾 SAVE INTEL</button>
@@ -721,8 +792,15 @@
     <div class="combo-counter" id="comboCounter">COMBO!</div>
     
     <script>
+        const countries = [
+            { name: "Australia", emoji: "🇦🇺" }, { name: "Canada", emoji: "🇨🇦" }, { name: "Denmark", emoji: "🇩🇰" },
+            { name: "France", emoji: "🇫🇷" }, { name: "Germany", emoji: "🇩🇪" }, { name: "Italy", emoji: "🇮🇹" },
+            { name: "Netherlands", emoji: "🇳🇱" }, { name: "Poland", emoji: "🇵🇱" }, { name: "Spain", emoji: "🇪🇸" },
+            { name: "Switzerland", emoji: "🇨🇭" }, { name: "United Kingdom", emoji: "🇬🇧" }, { name: "United States", emoji: "🇺🇸" }
+        ];
+
         // Store data
-        const stores = {
+        const initialStores = {
             fashion: [
                 { name: "Burleigh Breeze Boutique", url: "https://burleighbreeze-boutique.com/", country: "🇦🇺", countryName: "Australia" },
                 { name: "Drift Noosa", url: "https://www.driftandtide.com/", country: "🇦🇺", countryName: "Australia" },
@@ -733,6 +811,7 @@
                 { name: "Moss and Muse", url: "https://mossandmuse.co.uk/", country: "🇬🇧", countryName: "United Kingdom" },
                 { name: "Vntura", url: "https://vntura.com/", country: "🇬🇧", countryName: "United Kingdom" },
                 { name: "Atelier Rue", url: "https://atelier-rue.co.uk/", country: "🇬🇧", countryName: "United Kingdom" },
+                { name: "Lova-Toronto", url: "", country: "🇨🇦", countryName: "Canada" },
                 { name: "Couture Celeste", url: "https://coutureceleste.fr/", country: "🇫🇷", countryName: "France" },
                 { name: "Alpine Couture", url: "https://alpinecouture.ch/", country: "🇨🇭", countryName: "Switzerland" },
                 { name: "Livia und Kai Zurich", url: "https://liviaundkai-zurich.ch/", country: "🇨🇭", countryName: "Switzerland" },
@@ -749,6 +828,9 @@
                 { name: "Lights and Comfort", url: "https://lightsandcomfort.com/", country: "🇬🇧", countryName: "United Kingdom" },
                 { name: "Eichen und Moos", url: "https://eichenundmoss.de/", country: "🇩🇪", countryName: "Germany" },
                 { name: "Casa und Weiter", url: "https://casaundweiter.de/", country: "🇩🇪", countryName: "Germany" }
+            ],
+            other: [
+                { name: "Emily Divine", url: "http://pending.com", country: "🇬🇧", countryName: "United Kingdom"}
             ]
         };
         
@@ -757,25 +839,42 @@
         let draggedElement = null;
         let comboCount = 0;
         
+        function populateCountries() {
+            const select = document.getElementById('storeCountry');
+            select.innerHTML = '';
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = `${country.emoji}|${country.name}`;
+                option.textContent = `${country.emoji} ${country.name}`;
+                select.appendChild(option);
+            });
+        }
+
         // Initialize fighters
         function initializeFighters() {
             const uncategorizedZone = document.getElementById('uncategorizedZone');
+            uncategorizedZone.innerHTML = ''; // Clear the zone first
             
-            // Create fashion fighters
-            stores.fashion.forEach((store, index) => {
-                const fighter = createFighter(store, 'fashion', `fashion-${index}`);
-                uncategorizedZone.appendChild(fighter);
+            Object.keys(initialStores).forEach(category => {
+                initialStores[category].forEach((store, index) => {
+                    const fighterId = `${category}-${index}`;
+                    const fighter = createFighter(store, category, fighterId);
+                    uncategorizedZone.appendChild(fighter);
+                });
             });
-            
-            // Create home decor fighters
-            stores.homeDecor.forEach((store, index) => {
-                const fighter = createFighter(store, 'homeDecor', `decor-${index}`);
-                uncategorizedZone.appendChild(fighter);
-            });
-            
+
             updateStats();
         }
         
+        function getCategoryDisplayName(category) {
+            switch(category) {
+                case 'fashion': return '👔 FASHION';
+                case 'homeDecor': return '🏠 HOME DECOR';
+                case 'other': return '👜 OTHER';
+                default: return '❓ UNKNOWN';
+            }
+        }
+
         function createFighter(store, category, id) {
             const fighter = document.createElement('div');
             fighter.className = 'fighter';
@@ -785,7 +884,7 @@
                 <div class="fighter-info">
                     <div class="fighter-flag">${store.country}</div>
                     <div class="fighter-name">${store.name}</div>
-                    <div class="fighter-category">${category === 'fashion' ? '👔 FASHION' : '🏠 HOME DECOR'}</div>
+                    <div class="fighter-category">${getCategoryDisplayName(category)}</div>
                 </div>
                 <div class="fighter-sprite"></div>
             `;
@@ -806,15 +905,21 @@
         
         // Drag and drop handlers
         function handleDragStart(e) {
-            draggedElement = e.target;
-            e.target.classList.add('dragging');
+            draggedElement = e.target.closest('.fighter');
+            if (draggedElement) {
+                setTimeout(() => {
+                    draggedElement.classList.add('dragging');
+                }, 0);
+            }
         }
         
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
+        function handleDragEnd() {
+            if(draggedElement) {
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+            }
         }
         
-        // Set up drop zones
         document.querySelectorAll('.fighter-zone').forEach(zone => {
             zone.addEventListener('dragover', handleDragOver);
             zone.addEventListener('drop', handleDrop);
@@ -832,32 +937,30 @@
         
         function handleDrop(e) {
             e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            const dropZone = e.currentTarget;
+            dropZone.classList.remove('drag-over');
             
-            if (draggedElement) {
-                e.currentTarget.appendChild(draggedElement);
+            if (draggedElement && dropZone.classList.contains('fighter-zone')) {
+                dropZone.appendChild(draggedElement);
                 updateStartingLineupColor();
                 updateStats();
                 showCombo();
-                draggedElement = null;
             }
         }
         
-        // Starting lineup color management
         function updateStartingLineupColor() {
             const startingLineup = document.getElementById('startingLineup');
-            const fighterCount = startingLineup.children.length;
+            const fighterCount = startingLineup.querySelectorAll('.fighter').length;
             
             startingLineup.classList.remove('warning', 'danger');
             
             if (fighterCount === 5) {
                 startingLineup.classList.add('warning');
-            } else if (fighterCount >= 6) {
+            } else if (fighterCount > 5) {
                 startingLineup.classList.add('danger');
             }
         }
         
-        // Combo effects
         function showCombo() {
             comboCount++;
             const combo = document.getElementById('comboCounter');
@@ -865,22 +968,27 @@
             combo.textContent = `${comboCount} HIT COMBO!`;
             combo.style.animation = 'none';
             
-            setTimeout(() => {
-                combo.style.animation = 'combo-hit 1s ease-out';
-            }, 10);
-            
-            setTimeout(() => {
-                comboCount = 0;
-            }, 2000);
+            setTimeout(() => { combo.style.animation = 'combo-hit 1s ease-out'; }, 10);
+            setTimeout(() => { comboCount = 0; }, 2000);
         }
         
-        // Note management
+        // Note Modal
         function openNoteModal(fighterId) {
             currentFighterId = fighterId;
             const fighter = document.getElementById(fighterId);
             const storeName = fighter.dataset.storeName;
-            
+            const storeUrl = fighter.dataset.url;
+
             document.getElementById('modalTitle').innerHTML = `⚡ FIGHTER INTEL - ${storeName} ⚡`;
+            const urlElement = document.getElementById('modalUrl');
+            if (storeUrl) {
+                urlElement.href = storeUrl;
+                urlElement.textContent = `🔗 ${storeUrl}`;
+                urlElement.parentElement.style.display = 'block';
+            } else {
+                urlElement.parentElement.style.display = 'none';
+            }
+            
             document.getElementById('noteText').value = fighterNotes[fighterId] || '';
             document.getElementById('noteModal').style.display = 'block';
         }
@@ -902,15 +1010,46 @@
             currentFighterId = null;
         }
         
+        // Add Fighter Modal
+        function openAddFighterModal() {
+            document.getElementById('addFighterForm').reset();
+            document.getElementById('addFighterModal').style.display = 'block';
+        }
+
+        function closeAddFighterModal() {
+            document.getElementById('addFighterModal').style.display = 'none';
+        }
+
+        document.getElementById('addFighterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const storeName = document.getElementById('storeName').value;
+            const storeUrl = document.getElementById('storeUrl').value;
+            const [countryEmoji, countryName] = document.getElementById('storeCountry').value.split('|');
+            const category = document.getElementById('storeCategory').value;
+
+            const newFighterData = {
+                name: storeName,
+                url: storeUrl,
+                country: countryEmoji,
+                countryName: countryName
+            };
+            const newFighterId = `custom-${Date.now()}`;
+            const newFighterElement = createFighter(newFighterData, category, newFighterId);
+            document.getElementById('uncategorizedZone').appendChild(newFighterElement);
+
+            updateStats();
+            closeAddFighterModal();
+        });
+
         // Stats update
         function updateStats() {
-            const total = document.querySelectorAll('.fighter').length;
-            const categorized = document.querySelectorAll('.fighter-zone:not(#uncategorizedZone) .fighter').length;
-            const uncategorized = document.querySelectorAll('#uncategorizedZone .fighter').length;
+            const totalFighters = document.querySelectorAll('.fighter').length;
+            const availableFighters = document.querySelectorAll('#uncategorizedZone .fighter').length;
+            const inBattleFighters = totalFighters - availableFighters;
             
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('categorizedCount').textContent = categorized;
-            document.getElementById('uncategorizedCount').textContent = uncategorized;
+            document.getElementById('totalCount').textContent = totalFighters;
+            document.getElementById('inBattleCount').textContent = inBattleFighters;
+            document.getElementById('availableCount').textContent = availableFighters;
         }
         
         // Export functionality
@@ -941,7 +1080,7 @@
                     name: fighter.dataset.storeName,
                     url: fighter.dataset.url,
                     country: fighter.dataset.country,
-                    type: fighter.dataset.category === 'fashion' ? 'Fashion' : 'Home Decor',
+                    type: fighter.dataset.category,
                     notes: fighterNotes[fighter.id] || ''
                 }));
             });
@@ -962,7 +1101,7 @@
                 } else {
                     stores.forEach((store, index) => {
                         output += `### ${index + 1}. ${store.name}\n`;
-                        output += `- **🔗 URL:** ${store.url}\n`;
+                        output += `- **🔗 URL:** ${store.url || 'N/A'}\n`;
                         output += `- **🌍 Country:** ${store.country}\n`;
                         output += `- **🏷️ Type:** ${store.type}\n`;
                         if (store.notes) {
@@ -990,7 +1129,7 @@
             
             for (const [category, stores] of Object.entries(data)) {
                 stores.forEach(store => {
-                    csv += `"${category}","${store.name}","${store.url}","${store.country}","${store.type}","${store.notes.replace(/"/g, '""')}"\n`;
+                    csv += `"${category}","${store.name}","${store.url}","${store.country}","${store.type}","${(store.notes || '').replace(/"/g, '""')}"\n`;
                 });
             }
             
@@ -1012,26 +1151,18 @@
         // Reset functionality
         function resetAll() {
             if (confirm('⚡ RESET THE TOURNAMENT? ALL FIGHTERS WILL RETURN TO SELECT SCREEN! ⚡')) {
-                const uncategorizedZone = document.getElementById('uncategorizedZone');
-                // Get all fighters from all zones
-                const allFighters = document.querySelectorAll('.fighter');
+                // Clear all zones
+                document.querySelectorAll('.fighter-zone').forEach(zone => zone.innerHTML = '');
+                // Re-initialize with original fighters
+                initializeFighters(); 
                 
-                // Move each fighter back to uncategorized
-                allFighters.forEach(fighter => {
-                    uncategorizedZone.appendChild(fighter);
-                });
-                
-                // Clear all notes
                 fighterNotes = {};
                 
-                // Update the starting lineup color (should be back to green)
                 const startingLineup = document.getElementById('startingLineup');
                 startingLineup.classList.remove('warning', 'danger');
                 
-                // Update statistics
                 updateStats();
                 
-                // Show epic reset message
                 const combo = document.getElementById('comboCounter');
                 combo.textContent = 'TOURNAMENT RESET!';
                 combo.style.animation = 'combo-hit 2s ease-out';
@@ -1039,13 +1170,17 @@
         }
         
         // Initialize on load
-        window.addEventListener('DOMContentLoaded', initializeFighters);
+        window.addEventListener('DOMContentLoaded', () => {
+            populateCountries();
+            initializeFighters();
+        });
         
         // Close modals on escape
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
                 closeExportModal();
+                closeAddFighterModal();
             }
         });
     </script>
