@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Strategic Profitability Calculator</title>
+        <style>
+            :root {
+                --bg-color: #f8f9fa;
+                --container-bg: #ffffff";
+                --text-color: #333;
+                --header-color: #007bff;
+                --border-color: #dee2e6;
+                --table-header-bg: #f2f2f2;
+                --profit-color: #28a745;
+                --loss-color: #dc3545;
+                --highlight-bg: #fff3cd;
+            }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 900px;
+                margin: auto;
+                background-color: var(--container-bg);
+                padding: 25px 40px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            }
+            h1, h2, h3 {
+                color: var(--header-color);
+                border-bottom: 2px solid var(--border-color);
+                padding-bottom: 10px;
+            }
+            h1 {
+                text-align: center;
+                font-size: 2em;
+                border: none;
+            }
+            h2 {
+                font-size: 1.5em;
+                margin-top: 30px;
+            }
+            h3 {
+                font-size: 1.2em;
+                margin-top: 25px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            ul {
+                list-style-type: '✔  ';
+                padding-left: 20px;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+            .controls-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 25px;
+                background-color: var(--bg-color);
+                padding: 20px;
+                border-radius: 8px;
+                margin: 30px 0;
+            }
+            .control-group {
+                display: flex;
+                flex-direction: column;
+            }
+            label {
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+            input[type="number"], input[type="range"] {
+                width: 100%;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid var(--border-color);
+            }
+            input[type="range"] {
+                padding: 0;
+            }
+            .slider-value {
+                font-weight: bold;
+                color: var(--header-color);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid var(--border-color);
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: var(--table-header-bg);
+                font-weight: bold;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .profit {
+                color: var(--profit-color);
+                font-weight: bold;
+            }
+            .loss {
+                color: var(--loss-color);
+                font-weight: bold;
+            }
+            .highlight-row {
+                background-color: var(--highlight-bg);
+                font-weight: bold;
+            }
+            .highlight-row td {
+                 font-size: 1.1em;
+            }
+            .takeaways {
+                margin-top: 30px;
+            }
+            footer {
+                text-align: center;
+                margin-top: 30px;
+                font-size: 0.9em;
+                color: #888;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <h1>Strategic Profitability Calculator</h1>
+
+            <h2>Objective</h2>
+            <p>This analysis compares the current business model against a proposed "High-Leverage" model. The new model implements an aggressive quantity break strategy with the projected outcomes of an increased Conversion Rate (CVR) and an increased Average Order Value (AOV).</p>
+
+            <h2>Core Assumptions</h2>
+            <ul>
+                <li><strong>Cost Per Acquisition (CPA):</strong> €24</li>
+                <li><strong>Cost of Goods (COGS):</strong> 30% of retail value, with a €2.50 discount per additional item.</li>
+                <li><strong>Variable Fees:</strong> A combination of a fixed overhead and a variable refund rate.</li>
+                <li><strong>Fixed Fees:</strong> 10% of ad spend (for media buying services).</li>
+            </ul>
+            
+            <h2>Interactive Growth & Risk Levers</h2>
+            <div class="controls-container">
+                <div class="control-group">
+                    <label for="adSpend">Monthly Ad Spend (€):</label>
+                    <input type="number" id="adSpend" value="3000" step="100">
+                </div>
+                <div class="control-group">
+                    <label for="aovIncrease">AOV Increase (%): <span id="aovIncreaseValue" class="slider-value">50%</span></label>
+                    <input type="range" id="aovIncrease" min="0" max="100" value="50" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="cvrIncrease">CVR Increase (%): <span id="cvrIncreaseValue" class="slider-value">30%</span></label>
+                    <input type="range" id="cvrIncrease" min="0" max="100" value="30" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="refundRate">New Model Refund Rate (%): <span id="refundRateValue" class="slider-value">5.0%</span></label>
+                    <input type="range" id="refundRate" min="0" max="25" value="5" step="0.5">
+                </div>
+            </div>
+
+            <h2>Comparative Performance Analysis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Baseline Model</th>
+                        <th>"High-Leverage" Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Average Order Value (AOV)</td>
+                        <td id="base-aov">€48.30</td>
+                        <td id="hlam-aov">€72.45</td>
+                    </tr>
+                    <tr>
+                        <td>Conversion Rate (CVR)</td>
+                        <td id="base-cvr">2.50%</td>
+                        <td id="hlam-cvr">3.25%</td>
+                    </tr>
+                     <tr>
+                        <td>Variable Fee % (Overhead + Refund)</td>
+                        <td id="base-var-fee-percent">18.0%</td>
+                        <td id="hlam-var-fee-percent">18.0%</td>
+                    </tr>
+                    <tr>
+                        <td>Profit per Order</td>
+                        <td id="base-profit-per-order" class="profit">€1.87</td>
+                        <td id="hlam-profit-per-order" class="profit">€16.05</td>
+                    </tr>
+                    <tr>
+                        <td>Total Orders Generated</td>
+                        <td id="base-total-orders">125</td>
+                        <td id="hlam-total-orders">163</td>
+                    </tr>
+                    <tr>
+                        <td>Total Revenue</td>
+                        <td id="base-total-revenue">€6,038</td>
+                        <td id="hlam-total-revenue">€11,773</td>
+                    </tr>
+                    <tr>
+                        <td>Total Media Buying Fee (10%)</td>
+                        <td id="base-media-fee">-€300</td>
+                        <td id="hlam-media-fee">-€300</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td>Final Net Profit / Loss</td>
+                        <td id="base-final-profit" class="loss">-€67</td>
+                        <td id="hlam-final-profit" class="profit">€2,308</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td>Final Profit % on Revenue</td>
+                        <td id="base-profit-percent" class="loss">-1.11%</td>
+                        <td id="hlam-profit-percent" class="profit">19.60%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="takeaways">
+                <h2>Analysis and Key Takeaways</h2>
+                <ul>
+                    <li><strong>The Current Model is Unsustainable:</strong> The baseline model, with all costs accounted for, is unprofitable. A significant strategic shift is required.</li>
+                    <li><strong>AOV is the Primary Profit Driver:</strong> The analysis clearly shows that increasing the Average Order Value is the most powerful lever for profitability, making each customer acquisition vastly more efficient.</li>
+                    <li><strong>Path to Viability:</strong> The "High-Leverage" model transforms the business from a loss-making operation into a healthy, profitable one, demonstrating a clear path to sustainable growth.</li>
+                </ul>
+
+                <h3>Proposal</h3>
+                <p>Based on this analysis, I propose we implement the "High-Leverage" strategy for a 30-day test period. We will closely monitor AOV, CVR, and Refund Rate against the baseline to validate this hypothesis and confirm the most viable path to profitability.</p>
+            </div>
+
+            <footer>
+                <p>Interactive Profitability Calculator | Built for Strategic Planning</p>
+            </footer>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // --- FIXED BASELINE & CORE ASSUMPTIONS ---
+                const BASELINE_AOV = 48.30;
+                const BASELINE_ITEMS_PER_ORDER = 1.3;
+                const BASELINE_CVR_PERCENT = 2.5;
+                const BASELINE_REFUND_RATE = 0.05; // Fixed 5% refund rate for baseline
+                const CPA = 24;
+                const COGS_PERCENT = 0.30;
+                const COGS_ITEM_DISCOUNT = 2.50;
+                const FIXED_OVERHEAD_PERCENT = 0.13; // 13% fixed overhead
+                const MEDIA_BUYER_FEE_PERCENT = 0.10;
+
+                // --- INTERACTIVE ELEMENTS ---
+                const adSpendInput = document.getElementById('adSpend');
+                const aovIncreaseInput = document.getElementById('aovIncrease');
+                const cvrIncreaseInput = document.getElementById('cvrIncrease');
+                const refundRateInput = document.getElementById('refundRate');
+                
+                // --- SLIDER VALUE DISPLAYS ---
+                const aovIncreaseValue = document.getElementById('aovIncreaseValue');
+                const cvrIncreaseValue = document.getElementById('cvrIncreaseValue');
+                const refundRateValue = document.getElementById('refundRateValue');
+                
+                // --- DYNAMIC TEXT ELEMENTS ---
+                const baseVarFeePercent = document.getElementById('base-var-fee-percent');
+                const hlamVarFeePercent = document.getElementById('hlam-var-fee-percent');
+
+                // --- OUTPUT ELEMENTS (HLAM - High-Leverage AOV Model) ---
+                const hlamAov = document.getElementById('hlam-aov');
+                const hlamCvr = document.getElementById('hlam-cvr');
+                const hlamProfitPerOrder = document.getElementById('hlam-profit-per-order');
+                const hlamTotalOrders = document.getElementById('hlam-total-orders');
+                const hlamTotalRevenue = document.getElementById('hlam-total-revenue');
+                const hlamMediaFee = document.getElementById('hlam-media-fee');
+                const hlamFinalProfit = document.getElementById('hlam-final-profit');
+                const hlamProfitPercent = document.getElementById('hlam-profit-percent');
+                
+                // --- OUTPUT ELEMENTS (Baseline) ---
+                 const baseProfitPerOrder = document.getElementById('base-profit-per-order');
+                 const baseTotalOrders = document.getElementById('base-total-orders');
+                 const baseTotalRevenue = document.getElementById('base-total-revenue');
+                 const baseMediaFee = document.getElementById('base-media-fee');
+                 const baseFinalProfit = document.getElementById('base-final-profit');
+                 const baseProfitPercent = document.getElementById('base-profit-percent');
+
+                function calculateAndDisplay() {
+                    // --- GET CURRENT VALUES FROM INPUTS ---
+                    const adSpend = parseFloat(adSpendInput.value) || 0;
+                    const aovIncreasePercent = parseFloat(aovIncreaseInput.value);
+                    const cvrIncreasePercent = parseFloat(cvrIncreaseInput.value);
+                    const hlamRefundRatePercent = parseFloat(refundRateInput.value) / 100;
+
+                    const baseTotalVariableFeePercent = FIXED_OVERHEAD_PERCENT + BASELINE_REFUND_RATE;
+                    const hlamTotalVariableFeePercent = FIXED_OVERHEAD_PERCENT + hlamRefundRatePercent;
+                    
+                    // Update slider value displays
+                    aovIncreaseValue.textContent = `${aovIncreasePercent}%`;
+                    cvrIncreaseValue.textContent = `${cvrIncreasePercent}%`;
+                    refundRateValue.textContent = `${(hlamRefundRatePercent * 100).toFixed(1)}%`;
+                    
+                    // Update dynamic text
+                    baseVarFeePercent.textContent = `${(baseTotalVariableFeePercent * 100).toFixed(1)}%`;
+                    hlamVarFeePercent.textContent = `${(hlamTotalVariableFeePercent * 100).toFixed(1)}%`;
+
+                    // --- CALCULATE BASELINE MODEL (uses fixed refund rate) ---
+                    const baseTotalOrdersVal = adSpend > 0 ? adSpend / CPA : 0;
+                    const baseTotalRevenueVal = baseTotalOrdersVal * BASELINE_AOV;
+                    const baseMediaFeeVal = adSpend * MEDIA_BUYER_FEE_PERCENT;
+                    
+                    const baseInferredItems = BASELINE_AOV / (BASELINE_AOV / BASELINE_ITEMS_PER_ORDER);
+                    const baseCogsDiscount = (baseInferredItems - 1) * COGS_ITEM_DISCOUNT;
+                    const baseAdjustedCogs = (BASELINE_AOV * COGS_PERCENT) - baseCogsDiscount;
+                    const baseTransactionFeePerOrder = BASELINE_AOV * baseTotalVariableFeePercent;
+                    const baseProfitPerOrderVal = BASELINE_AOV - CPA - baseAdjustedCogs - baseTransactionFeePerOrder;
+
+                    const baseGrossProfit = baseTotalOrdersVal * baseProfitPerOrderVal;
+                    const baseFinalProfitVal = baseGrossProfit - baseMediaFeeVal;
+                    const baseProfitPercentVal = baseTotalRevenueVal > 0 ? (baseFinalProfitVal / baseTotalRevenueVal) * 100 : 0;
+
+                    // --- CALCULATE HIGH-LEVERAGE MODEL (uses dynamic refund rate) ---
+                    const newAov = BASELINE_AOV * (1 + aovIncreasePercent / 100);
+                    const hlamTotalOrdersVal = baseTotalOrdersVal * (1 + cvrIncreasePercent / 100);
+                    const hlamTotalRevenueVal = hlamTotalOrdersVal * newAov;
+                    
+                    const hlamInferredItems = newAov / (BASELINE_AOV / BASELINE_ITEMS_PER_ORDER);
+                    const hlamCogsDiscount = (hlamInferredItems - 1) * COGS_ITEM_DISCOUNT;
+                    const hlamAdjustedCogs = (newAov * COGS_PERCENT) - hlamCogsDiscount;
+                    const hlamTransactionFeePerOrder = newAov * hlamTotalVariableFeePercent;
+                    const hlamProfitPerOrderVal = newAov - CPA - hlamAdjustedCogs - hlamTransactionFeePerOrder;
+
+                    const hlamGrossProfit = hlamTotalOrdersVal * hlamProfitPerOrderVal;
+                    const hlamMediaFeeVal = adSpend * MEDIA_BUYER_FEE_PERCENT;
+                    const hlamFinalProfitVal = hlamGrossProfit - hlamMediaFeeVal;
+                    const hlamProfitPercentVal = hlamTotalRevenueVal > 0 ? (hlamFinalProfitVal / hlamTotalRevenueVal) * 100 : 0;
+
+                    // --- UPDATE THE DOM (BASELINE) ---
+                    baseProfitPerOrder.textContent = `€${baseProfitPerOrderVal.toFixed(2)}`;
+                    baseTotalOrders.textContent = Math.round(baseTotalOrdersVal);
+                    baseTotalRevenue.textContent = `€${Math.round(baseTotalRevenueVal).toLocaleString()}`;
+                    baseMediaFee.textContent = `-€${Math.round(baseMediaFeeVal).toLocaleString()}`;
+                    baseFinalProfit.textContent = `€${Math.round(baseFinalProfitVal).toLocaleString()}`;
+                    baseProfitPercent.textContent = `${baseProfitPercentVal.toFixed(2)}%`;
+                    updateProfitLossClass(baseProfitPerOrder, baseProfitPerOrderVal);
+                    updateProfitLossClass(baseFinalProfit, baseFinalProfitVal);
+                    updateProfitLossClass(baseProfitPercent, baseFinalProfitVal);
+                    
+                    // --- UPDATE THE DOM (HLAM) ---
+                    hlamAov.textContent = `€${newAov.toFixed(2)}`;
+                    document.getElementById('hlam-cvr').textContent = `${(BASELINE_CVR_PERCENT * (1 + cvrIncreasePercent / 100)).toFixed(2)}%`;
+                    hlamProfitPerOrder.textContent = `€${hlamProfitPerOrderVal.toFixed(2)}`;
+                    hlamTotalOrders.textContent = Math.round(hlamTotalOrdersVal);
+                    hlamTotalRevenue.textContent = `€${Math.round(hlamTotalRevenueVal).toLocaleString()}`;
+                    hlamMediaFee.textContent = `-€${Math.round(hlamMediaFeeVal).toLocaleString()}`;
+                    hlamFinalProfit.textContent = `€${Math.round(hlamFinalProfitVal).toLocaleString()}`;
+                    hlamProfitPercent.textContent = `${hlamProfitPercentVal.toFixed(2)}%`;
+
+                    updateProfitLossClass(hlamProfitPerOrder, hlamProfitPerOrderVal);
+                    updateProfitLossClass(hlamFinalProfit, hlamFinalProfitVal);
+                    updateProfitLossClass(hlamProfitPercent, hlamFinalProfitVal);
+                }
+                
+                function updateProfitLossClass(element, value) {
+                    element.classList.remove('profit', 'loss');
+                    if (value >= 0) {
+                        element.classList.add('profit');
+                    } else {
+                        element.classList.add('loss');
+                    }
+                }
+
+                // --- EVENT LISTENERS ---
+                adSpendInput.addEventListener('input', calculateAndDisplay);
+                aovIncreaseInput.addEventListener('input', calculateAndDisplay);
+                cvrIncreaseInput.addEventListener('input', calculateAndDisplay);
+                refundRateInput.addEventListener('input', calculateAndDisplay);
+
+                // --- INITIAL CALCULATION ON LOAD ---
+                calculateAndDisplay();
+            });
+        </script>
+    </body>
+</html>
