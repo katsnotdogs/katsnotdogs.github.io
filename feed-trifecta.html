@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Product Feed Trifecta</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9fafb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <!-- Define gradients for visual appeal -->
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:0.1" />
+                </linearGradient>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#10B981;stop-opacity:0.1" />
+                </linearGradient>
+                <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#F59E0B;stop-opacity:0.1" />
+                </linearGradient>
+            </defs>
+            
+            <!-- Title -->
+            <text x="200" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1F2937">The Product Feed Trifecta</text>
+            
+            <!-- Three overlapping circles -->
+            <!-- Search Volume circle (top) - 1.5x bigger -->
+            <circle cx="200" cy="170" r="110" fill="url(#grad1)" stroke="#3B82F6" stroke-width="2"/>
+            
+            <!-- Low Competition circle (bottom left) -->
+            <circle cx="155" cy="250" r="90" fill="url(#grad2)" stroke="#10B981" stroke-width="2"/>
+            
+            <!-- High AOV circle (bottom right) -->
+            <circle cx="245" cy="250" r="90" fill="url(#grad3)" stroke="#F59E0B" stroke-width="2"/>
+            
+            <!-- Center sweet spot highlight -->
+            <circle cx="200" cy="210" r="22" fill="#8B5CF6" fill-opacity="0.5" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4,4"/>
+            
+            <!-- Labels outside circles -->
+            <text x="200" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#3B82F6">Search Volume</text>
+            <text x="85" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#10B981">Low Competition</text>
+            <text x="315" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#F59E0B">High AOV</text>
+            
+            <!-- Sweet spot label -->
+            <text x="200" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">Sweet Spot</text>
+            
+            <!-- Subtle annotations in overlap areas -->
+            <text x="200" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">high demand</text>
+            <text x="155" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">easy entry</text>
+            <text x="245" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">big margins</text>
+        </svg>
+    </div>
+</body>
+</html>
