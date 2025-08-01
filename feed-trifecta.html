@@ -3,35 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Product Feed Trifecta</title>
+    <title>The Product Feed Trifecta - Interactive</title>
     <style>
         body {
             margin: 0;
             padding: 20px;
             font-family: Arial, sans-serif;
             background-color: #f9fafb;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
         .container {
+            max-width: 800px;
+            margin: 0 auto;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             padding: 40px;
-            max-width: 600px;
-            width: 100%;
         }
         svg {
             width: 100%;
             height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+        .controls {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+        }
+        .slider-group {
+            margin-bottom: 20px;
+        }
+        .slider-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #374151;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: #d1d5db;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+        }
+        #searchSlider::-webkit-slider-thumb { background: #3b82f6; }
+        #competitionSlider::-webkit-slider-thumb { background: #10b981; }
+        #aovSlider::-webkit-slider-thumb { background: #f59e0b; }
+        #searchSlider::-moz-range-thumb { background: #3b82f6; }
+        #competitionSlider::-moz-range-thumb { background: #10b981; }
+        #aovSlider::-moz-range-thumb { background: #f59e0b; }
+        .value {
+            font-weight: bold;
+            color: #1f2937;
+            min-width: 40px;
+        }
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ede9fe;
+            border-radius: 6px;
+            color: #5b21b6;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" id="trifectaSvg">
             <!-- Define gradients for visual appeal -->
             <defs>
                 <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -52,31 +115,130 @@
             <text x="200" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1F2937">The Product Feed Trifecta</text>
             
             <!-- Three overlapping circles -->
-            <!-- Search Volume circle (top) - 1.5x bigger -->
-            <circle cx="200" cy="170" r="110" fill="url(#grad1)" stroke="#3B82F6" stroke-width="2"/>
+            <!-- Search Volume circle (top) -->
+            <circle id="searchCircle" cx="200" cy="170" r="110" fill="url(#grad1)" stroke="#3B82F6" stroke-width="2"/>
             
             <!-- Low Competition circle (bottom left) -->
-            <circle cx="155" cy="250" r="90" fill="url(#grad2)" stroke="#10B981" stroke-width="2"/>
+            <circle id="competitionCircle" cx="155" cy="250" r="90" fill="url(#grad2)" stroke="#10B981" stroke-width="2"/>
             
             <!-- High AOV circle (bottom right) -->
-            <circle cx="245" cy="250" r="90" fill="url(#grad3)" stroke="#F59E0B" stroke-width="2"/>
+            <circle id="aovCircle" cx="245" cy="250" r="90" fill="url(#grad3)" stroke="#F59E0B" stroke-width="2"/>
             
-            <!-- Center sweet spot highlight -->
-            <circle cx="200" cy="210" r="22" fill="#8B5CF6" fill-opacity="0.5" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4,4"/>
+            <!-- Center opportunity highlight -->
+            <circle id="opportunityCircle" cx="200" cy="210" r="22" fill="#8B5CF6" fill-opacity="0.6" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4,4"/>
             
             <!-- Labels outside circles -->
             <text x="200" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#3B82F6">Search Volume</text>
             <text x="85" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#10B981">Low Competition</text>
             <text x="315" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#F59E0B">High AOV</text>
             
-            <!-- Sweet spot label -->
-            <text x="200" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">Sweet Spot</text>
+            <!-- Opportunity label -->
+            <text id="opportunityLabel" x="200" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">Opportunity</text>
             
             <!-- Subtle annotations in overlap areas -->
             <text x="200" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">high demand</text>
             <text x="155" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">easy entry</text>
             <text x="245" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280" font-style="italic">big margins</text>
         </svg>
+        
+        <div class="controls">
+            <div class="slider-group">
+                <label for="searchSlider">Search Volume</label>
+                <div class="slider-container">
+                    <input type="range" id="searchSlider" min="50" max="150" value="110" step="5">
+                    <span class="value" id="searchValue">110</span>
+                </div>
+            </div>
+            
+            <div class="slider-group">
+                <label for="competitionSlider">Low Competition (less competition = bigger circle)</label>
+                <div class="slider-container">
+                    <input type="range" id="competitionSlider" min="50" max="150" value="90" step="5">
+                    <span class="value" id="competitionValue">90</span>
+                </div>
+            </div>
+            
+            <div class="slider-group">
+                <label for="aovSlider">High AOV</label>
+                <div class="slider-container">
+                    <input type="range" id="aovSlider" min="50" max="150" value="90" step="5">
+                    <span class="value" id="aovValue">90</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            💡 <strong>Try this:</strong> Lower the search volume and watch the opportunity shrink. Then increase AOV and lower competition to see how they compensate!
+        </div>
     </div>
+    
+    <script>
+        // Get elements
+        const searchSlider = document.getElementById('searchSlider');
+        const competitionSlider = document.getElementById('competitionSlider');
+        const aovSlider = document.getElementById('aovSlider');
+        
+        const searchValue = document.getElementById('searchValue');
+        const competitionValue = document.getElementById('competitionValue');
+        const aovValue = document.getElementById('aovValue');
+        
+        const searchCircle = document.getElementById('searchCircle');
+        const competitionCircle = document.getElementById('competitionCircle');
+        const aovCircle = document.getElementById('aovCircle');
+        const opportunityCircle = document.getElementById('opportunityCircle');
+        
+        // Update function
+        function updateDiagram() {
+            // Get values
+            const searchSize = parseInt(searchSlider.value);
+            const competitionSize = parseInt(competitionSlider.value);
+            const aovSize = parseInt(aovSlider.value);
+            
+            // Update display values
+            searchValue.textContent = searchSize;
+            competitionValue.textContent = competitionSize;
+            aovValue.textContent = aovSize;
+            
+            // Update circle sizes
+            searchCircle.setAttribute('r', searchSize);
+            competitionCircle.setAttribute('r', competitionSize);
+            aovCircle.setAttribute('r', aovSize);
+            
+            // Calculate opportunity size
+            // Base opportunity is affected by all three factors
+            // Search volume has direct impact, competition and AOV can compensate
+            const searchFactor = searchSize / 110; // Normalized to original size
+            const competitionFactor = competitionSize / 90; // Higher = better (less competition)
+            const aovFactor = aovSize / 90; // Higher = better
+            
+            // Opportunity calculation: search volume is primary, but can be boosted by other factors
+            const baseOpportunity = 22; // Original size
+            const searchImpact = searchFactor * 0.5; // 50% weight on search
+            const compensationFactor = (competitionFactor + aovFactor) / 2 * 0.5; // 50% weight on compensation
+            
+            const opportunitySize = baseOpportunity * (searchImpact + compensationFactor);
+            
+            // Update opportunity circle
+            opportunityCircle.setAttribute('r', Math.max(10, Math.min(35, opportunitySize)));
+            
+            // Adjust positions slightly if circles get very large/small
+            const searchOffset = (searchSize - 110) * 0.2;
+            searchCircle.setAttribute('cy', 170 - searchOffset);
+            
+            const compOffset = (competitionSize - 90) * 0.1;
+            competitionCircle.setAttribute('cx', 155 - compOffset);
+            
+            const aovOffset = (aovSize - 90) * 0.1;
+            aovCircle.setAttribute('cx', 245 + aovOffset);
+        }
+        
+        // Add event listeners
+        searchSlider.addEventListener('input', updateDiagram);
+        competitionSlider.addEventListener('input', updateDiagram);
+        aovSlider.addEventListener('input', updateDiagram);
+        
+        // Initial update
+        updateDiagram();
+    </script>
 </body>
 </html>
